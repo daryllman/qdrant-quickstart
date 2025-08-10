@@ -48,6 +48,79 @@ pip install qdrant-client
 
 For advanced users who want to build from source, visit the [Qdrant GitHub repository](https://github.com/qdrant/qdrant).
 
+## Running and Testing the Examples
+
+This repository includes comprehensive examples and tests to help you learn Qdrant. Here's how to run them:
+
+### Quick Start - Run All Examples
+
+The easiest way to test everything is using the main runner script:
+
+```bash
+# Install dependencies and run all examples
+python run_examples.py
+```
+
+This script will:
+- Check if Qdrant is running and offer to start it with Docker
+- Install all required Python dependencies
+- Run all example scripts with proper error handling
+- Execute the test suite
+- Clean up resources when done
+
+### Manual Setup and Testing
+
+If you prefer to run things manually:
+
+1. **Start Qdrant:**
+   ```bash
+   docker run -p 6333:6333 -p 6334:6334 qdrant/qdrant
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Run individual examples:**
+   ```bash
+   # Basic functionality
+   python examples/basic_example.py
+   
+   # Document search system
+   python examples/document_search.py
+   
+   # Advanced features (filtering, batch operations)
+   python examples/advanced_features.py
+   ```
+
+4. **Run tests:**
+   ```bash
+   pytest tests/ -v
+   ```
+
+### Example Scripts Overview
+
+- **`examples/basic_example.py`**: Demonstrates core Qdrant functionality (connection, collections, search)
+- **`examples/document_search.py`**: Complete document search system with multiple queries
+- **`examples/advanced_features.py`**: Advanced features like filtering, batch operations, and collection management
+- **`tests/test_qdrant_basics.py`**: Automated tests to verify functionality
+
+### Testing Individual Components
+
+You can also test specific functionality:
+
+```bash
+# Test connection and basic operations
+python -c "
+from qdrant_client import QdrantClient
+client = QdrantClient('localhost', port=6333)
+print('✅ Connected successfully!')
+collections = client.get_collections()
+print(f'Available collections: {len(collections.collections)}')
+"
+```
+
 ## Quick Start Guide
 
 ### Step 1: Install the Python Client
