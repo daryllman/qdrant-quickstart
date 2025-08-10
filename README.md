@@ -15,8 +15,25 @@ Qdrant is a vector similarity search engine that allows you to:
 
 Before starting, make sure you have:
 - Python 3.8 or higher
-- pip (Python package installer)
+- **uv (recommended)** or pip (Python package installer)
 - Docker (optional, for running Qdrant in a container)
+
+**Note:** We recommend using [uv](https://github.com/astral-sh/uv) for faster dependency management and better virtual environment handling.
+
+### Installing uv
+
+If you don't have uv installed, you can install it with:
+
+```bash
+# On macOS and Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# On Windows
+powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# Using pip
+pip install uv
+```
 
 ## Installation Options
 
@@ -56,6 +73,31 @@ This repository includes comprehensive examples and tests to help you learn Qdra
 
 The easiest way to test everything is using the main runner script:
 
+#### Using uv (Recommended)
+
+**Option 1: Automatic (Recommended)**
+```bash
+# uv run automatically creates venv and installs dependencies
+uv run python run_examples.py
+```
+
+**Option 2: Manual (for more control)**
+```bash
+# Create virtual environment and install dependencies
+uv venv
+uv pip install -r requirements.txt
+
+# Run all examples
+uv run python run_examples.py
+```
+
+Or even simpler, run everything in one command:
+```bash
+uv run python run_examples.py
+```
+
+#### Using pip
+
 ```bash
 # Install dependencies and run all examples
 python run_examples.py
@@ -63,7 +105,7 @@ python run_examples.py
 
 This script will:
 - Check if Qdrant is running and offer to start it with Docker
-- Install all required Python dependencies
+- Install all required Python dependencies (if not using uv)
 - Run all example scripts with proper error handling
 - Execute the test suite
 - Clean up resources when done
@@ -78,11 +120,40 @@ If you prefer to run things manually:
    ```
 
 2. **Install dependencies:**
+
+   **Using uv (Recommended):**
+   
+   **Automatic (recommended for quick testing):**
+   ```bash
+   uv run python script.py  # Automatically handles venv and dependencies
+   ```
+   
+   **Manual (for development work):**
+   ```bash
+   uv venv
+   uv pip install -r requirements.txt
+   ```
+
+   **Using pip:**
    ```bash
    pip install -r requirements.txt
    ```
 
 3. **Run individual examples:**
+
+   **Using uv:**
+   ```bash
+   # Basic functionality
+   uv run python examples/basic_example.py
+   
+   # Document search system
+   uv run python examples/document_search.py
+   
+   # Advanced features (filtering, batch operations)
+   uv run python examples/advanced_features.py
+   ```
+
+   **Using pip:**
    ```bash
    # Basic functionality
    python examples/basic_example.py
@@ -95,6 +166,13 @@ If you prefer to run things manually:
    ```
 
 4. **Run tests:**
+
+   **Using uv:**
+   ```bash
+   uv run pytest tests/ -v
+   ```
+
+   **Using pip:**
    ```bash
    pytest tests/ -v
    ```
@@ -110,6 +188,19 @@ If you prefer to run things manually:
 
 You can also test specific functionality:
 
+**Using uv:**
+```bash
+# Test connection and basic operations
+uv run python -c "
+from qdrant_client import QdrantClient
+client = QdrantClient('localhost', port=6333)
+print('✅ Connected successfully!')
+collections = client.get_collections()
+print(f'Available collections: {len(collections.collections)}')
+"
+```
+
+**Using pip:**
 ```bash
 # Test connection and basic operations
 python -c "
@@ -125,6 +216,13 @@ print(f'Available collections: {len(collections.collections)}')
 
 ### Step 1: Install the Python Client
 
+**Using uv (Recommended):**
+```bash
+uv venv
+uv pip install qdrant-client
+```
+
+**Using pip:**
 ```bash
 pip install qdrant-client
 ```
@@ -322,6 +420,12 @@ print("Collection info:", collection_info)
 
 For production applications, use proper embedding models:
 
+**Using uv (Recommended):**
+```bash
+uv pip install sentence-transformers
+```
+
+**Using pip:**
 ```bash
 pip install sentence-transformers
 ```
@@ -362,6 +466,7 @@ Qdrant provides a web interface for managing your data:
 1. **Connection refused**: Make sure Qdrant is running and the port is correct
 2. **Collection not found**: Create the collection before inserting data
 3. **Vector size mismatch**: Ensure all vectors have the same dimension as specified in the collection
+4. **Dependency issues**: If you encounter dependency conflicts, try using `uv` instead of `pip` for better dependency resolution
 
 ### Getting Help
 

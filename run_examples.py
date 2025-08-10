@@ -21,6 +21,14 @@ def start_qdrant():
     """Start Qdrant using Docker."""
     print("🐳 Starting Qdrant with Docker...")
     try:
+        # First, try to stop and remove any existing container
+        try:
+            subprocess.run(["docker", "stop", "qdrant-quickstart"], check=False)
+            subprocess.run(["docker", "rm", "qdrant-quickstart"], check=False)
+        except:
+            pass
+        
+        # Start new container
         subprocess.run([
             "docker", "run", "-d", "--name", "qdrant-quickstart",
             "-p", "6333:6333", "-p", "6334:6334",
@@ -49,7 +57,8 @@ def install_dependencies():
     """Install Python dependencies."""
     print("📦 Installing Python dependencies...")
     try:
-        subprocess.run([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"], check=True)
+        # Use uv instead of pip
+        subprocess.run(["uv", "pip", "install", "-r", "requirements.txt"], check=True)
         print("✅ Dependencies installed successfully!")
         return True
     except subprocess.CalledProcessError as e:
@@ -63,7 +72,8 @@ def run_example(example_name, script_path):
     print(f"{'='*50}")
     
     try:
-        result = subprocess.run([sys.executable, script_path], 
+        # Use uv run directly instead of uv run python
+        result = subprocess.run(["uv", "run", script_path], 
                               capture_output=True, text=True, timeout=60)
         
         if result.returncode == 0:
@@ -86,7 +96,8 @@ def run_tests():
     print(f"{'='*50}")
     
     try:
-        result = subprocess.run([sys.executable, "-m", "pytest", "tests/", "-v"], 
+        # Use uv run directly instead of uv run python
+        result = subprocess.run(["uv", "run", "pytest", "tests/", "-v"], 
                               capture_output=True, text=True, timeout=120)
         
         print(result.stdout)
@@ -123,10 +134,16 @@ def main():
     else:
         print("✅ Qdrant is running!")
     
-    # Install dependencies
-    if not install_dependencies():
-        print("❌ Cannot proceed without dependencies.")
-        return
+    # Skip dependency installation if running with uv (uv run handles this automatically)
+    # Check if we're running with uv by looking at the Python executable path
+    python_executable = sys.executable
+    if "uv" in python_executable or "UV_RUNNING_DIR" in os.environ:
+        print("✅ Using uv - dependencies will be handled automatically!")
+    else:
+        # Install dependencies only if not using uv
+        if not install_dependencies():
+            print("❌ Cannot proceed without dependencies.")
+            return
     
     # Run examples
     examples = [
