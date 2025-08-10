@@ -125,7 +125,7 @@ If you prefer to run things manually:
    
    **Automatic (recommended for quick testing):**
    ```bash
-   uv run python script.py  # Automatically handles venv and dependencies
+   uv run python examples/basic_example.py  # Automatically handles venv and dependencies
    ```
    
    **Manual (for development work):**
